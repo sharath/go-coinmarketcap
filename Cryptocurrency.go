@@ -65,6 +65,9 @@ func (c *Client) GetInfo(key, vals string) (CryptocurrencyInfo, error) {
 	req.Header["X-CMC_PRO_API_KEY"] = []string{c.apiKey}
 
 	resp, err := c.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
 	defer resp.Body.Close()
 
 	response := new(CryptocurrencyInfoResponse)
@@ -111,6 +114,9 @@ func (c *Client) GetIDMapFor(symbols ...string) (CryptocurrencyMap, error) {
 	req.Header["X-CMC_PRO_API_KEY"] = []string{c.apiKey}
 
 	resp, err := c.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
 	defer resp.Body.Close()
 
 	response := new(CryptocurrencyMapResponse)
@@ -145,6 +151,9 @@ func (c *Client) GetIDMapWhere(status string, start, limit int) (CryptocurrencyM
 	req.Header["X-CMC_PRO_API_KEY"] = []string{c.apiKey}
 
 	resp, err := c.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
 	defer resp.Body.Close()
 
 	response := new(CryptocurrencyMapResponse)
