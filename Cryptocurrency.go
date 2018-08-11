@@ -58,7 +58,10 @@ func (c *Client) GetInfo(key, vals string) (CryptocurrencyInfo, error) {
 	if err != nil {
 		return nil, err
 	}
-	req.URL.Query().Add(key, vals)
+	q := req.URL.Query()
+	q.Add(key, vals)
+	req.URL.RawQuery = q.Encode()
+
 	req.Header["X-CMC_PRO_API_KEY"] = []string{c.apiKey}
 
 	resp, err := c.client.Do(req)
@@ -101,7 +104,10 @@ func (c *Client) GetIDMapFor(symbols ...string) (CryptocurrencyMap, error) {
 	}
 
 	params := strings.Join(symbols, ",")
-	req.URL.Query().Add("symbol", params)
+	q := req.URL.Query()
+	q.Add("symbol", params)
+	req.URL.RawQuery = q.Encode()
+
 	req.Header["X-CMC_PRO_API_KEY"] = []string{c.apiKey}
 
 	resp, err := c.client.Do(req)
@@ -125,9 +131,13 @@ func (c *Client) GetIDMapWhere(status string, start, limit int) (CryptocurrencyM
 	if err != nil {
 		return nil, err
 	}
-	req.URL.Query().Add("listing_status", status)
-	req.URL.Query().Add("start", strconv.Itoa(start))
-	req.URL.Query().Add("limit", strconv.Itoa(limit))
+
+	q := req.URL.Query()
+	q.Add("listing_status", status)
+	q.Add("start", strconv.Itoa(start))
+	q.Add("limit", strconv.Itoa(limit))
+	req.URL.RawQuery = q.Encode()
+
 	req.Header["X-CMC_PRO_API_KEY"] = []string{c.apiKey}
 
 	resp, err := c.client.Do(req)
