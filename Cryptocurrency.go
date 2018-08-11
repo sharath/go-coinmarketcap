@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"strconv"
+	"net/url"
 	"strings"
 	"time"
 )
@@ -135,19 +135,15 @@ func (c *Client) GetIDMapFor(symbols ...string) (CryptocurrencyMap, error) {
 // Allowed values for status: "active", "inactive"
 // start >= 1
 // limit 1 - 5000
-func (c *Client) GetIDMapWhere(status string, start, limit int) (CryptocurrencyMap, error) {
+func (c *Client) GetIDMapWhere(opts ...func(values url.Values) string) (CryptocurrencyMap, error) {
 	endpt := "map"
 	req, err := http.NewRequest("GET", apiURL+cryptocurrency+endpt, nil)
 	if err != nil {
 		return nil, err
 	}
-
-	q := req.URL.Query()
-	q.Add("listing_status", status)
-	q.Add("start", strconv.Itoa(start))
-	q.Add("limit", strconv.Itoa(limit))
-	req.URL.RawQuery = q.Encode()
-
+	for _, opt := range opts {
+		req.URL.RawQuery = opt(req.URL.Query())
+	}
 	req.Header["X-CMC_PRO_API_KEY"] = []string{c.apiKey}
 
 	resp, err := c.client.Do(req)
@@ -157,6 +153,69 @@ func (c *Client) GetIDMapWhere(status string, start, limit int) (CryptocurrencyM
 	defer resp.Body.Close()
 
 	response := new(CryptocurrencyMapResponse)
+	err = json.NewDecoder(resp.Body).Decode(response)
+	if err != nil {
+		return nil, err
+	}
+
+	if response.Status.ErrorCode >= 400 {
+		return nil, errors.New(response.Status.ErrorMessage)
+	}
+	return response.Data, err
+}
+
+// listings/latest
+type CryptocurrencyListingsLatestPrice struct {
+	Price            float64   `json:"price"`
+	Volume24H        int64     `json:"volume_24h"`
+	PercentChange1H  float64   `json:"percent_change_1h"`
+	PercentChange24H float64   `json:"percent_change_24h"`
+	PercentChange7D  float64   `json:"percent_change_7d"`
+	MarketCap        int64     `json:"market_cap"`
+	LastUpdated      time.Time `json:"last_updated"`
+}
+type CryptocurrencyListingsLatestData struct {
+	ID                int       `json:"id"`
+	Name              string    `json:"name"`
+	Symbol            string    `json:"symbol"`
+	Slug              string    `json:"slug"`
+	CmcRank           int       `json:"cmc_rank"`
+	NumMarketPairs    int       `json:"num_market_pairs"`
+	CirculatingSupply int       `json:"circulating_supply"`
+	TotalSupply       int       `json:"total_supply"`
+	MaxSupply         int       `json:"max_supply"`
+	LastUpdated       time.Time `json:"last_updated"`
+	DateAdded         time.Time `json:"date_added"`
+	Quote             struct {
+		USD CryptocurrencyListingsLatestPrice `json:"USD"`
+		BTC CryptocurrencyListingsLatestPrice `json:"BTC"`
+	} `json:"quote"`
+}
+type CryptocurrencyListingsLatest map[string]CryptocurrencyListingsLatestData
+type CryptocurrencyListingsLatestResponse struct {
+	Data   CryptocurrencyListingsLatest `json:"data"`
+	Status CMCStatus                    `json:"status"`
+}
+
+// GetIDMapFor fetches CMC ID Maps for specified symbols
+func (c *Client) GetLatestListings(opts ...func(values url.Values) string) (CryptocurrencyListingsLatest, error) {
+	endpt := "listings/latest"
+	req, err := http.NewRequest("GET", apiURL+cryptocurrency+endpt, nil)
+	if err != nil {
+		return nil, err
+	}
+	for _, opt := range opts {
+		req.URL.RawQuery = opt(req.URL.Query())
+	}
+	req.Header["X-CMC_PRO_API_KEY"] = []string{c.apiKey}
+
+	resp, err := c.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	response := new(CryptocurrencyListingsLatestResponse)
 	err = json.NewDecoder(resp.Body).Decode(response)
 	if err != nil {
 		return nil, err

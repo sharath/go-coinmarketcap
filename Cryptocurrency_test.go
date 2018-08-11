@@ -80,7 +80,7 @@ func TestClient_GetIDMapWhere(t *testing.T) {
 		return
 	}
 	{
-		data, err := c.GetIDMapWhere("active", 1, 200)
+		data, err := c.GetIDMapWhere()
 		if err != nil || data == nil {
 			fmt.Println(err)
 			t.FailNow()
