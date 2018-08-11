@@ -11,13 +11,15 @@ func checkKey(t *testing.T) *Client {
 	if c == nil {
 		fmt.Println("Warning: CMC_API_KEY not set.")
 		fmt.Println("This test doesn't mean anything basically.")
-		t.SkipNow()
 	}
 	return c
 }
 
 func TestClient_GetInfo(t *testing.T) {
 	c := checkKey(t)
+	if c == nil {
+		return
+	}
 	{
 		data, err := c.GetInfo("symbol", "ETH,BTC,LTC")
 		if err != nil || data == nil {
@@ -34,6 +36,9 @@ func TestClient_GetInfo(t *testing.T) {
 
 func TestClient_GetInfoByID(t *testing.T) {
 	c := checkKey(t)
+	if c == nil {
+		return
+	}
 	{
 		data, err := c.GetInfoByID(1, 2, 3)
 		if err != nil || data == nil {
@@ -44,6 +49,9 @@ func TestClient_GetInfoByID(t *testing.T) {
 
 func TestClient_GetInfoBySymbol(t *testing.T) {
 	c := checkKey(t)
+	if c == nil {
+		return
+	}
 	{
 		data, err := c.GetInfoBySymbol("BTC", "ETH")
 		if err != nil || data == nil {
@@ -54,6 +62,9 @@ func TestClient_GetInfoBySymbol(t *testing.T) {
 
 func TestClient_GetIDMapFor(t *testing.T) {
 	c := checkKey(t)
+	if c == nil {
+		return
+	}
 	{
 		data, err := c.GetIDMapFor("BTC", "ETH")
 		if err != nil || data == nil {
@@ -65,6 +76,9 @@ func TestClient_GetIDMapFor(t *testing.T) {
 
 func TestClient_GetIDMapWhere(t *testing.T) {
 	c := checkKey(t)
+	if c == nil {
+		return
+	}
 	{
 		data, err := c.GetIDMapWhere("active", 1, 200)
 		if err != nil || data == nil {
