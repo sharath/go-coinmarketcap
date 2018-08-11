@@ -85,7 +85,7 @@ type CryptocurrencyMapData struct {
 	Name                string    `json:"name"`
 	Symbol              string    `json:"symbol"`
 	Slug                string    `json:"slug"`
-	IsActive            bool      `json:"is_active"`
+	IsActive            int       `json:"is_active"` // Note: the documentation says its a bool, but response isn't
 	FirstHistoricalData time.Time `json:"first_historical_data"`
 	LastHistoricalData  time.Time `json:"last_historical_data"`
 }
@@ -95,7 +95,7 @@ type CryptocurrencyMapResponse struct {
 	Status CMCStatus         `json:"status"`
 }
 
-// GetIDMapFor fetches CMC ID Maps for specified parameters
+// GetIDMapFor fetches CMC ID Maps for specified symbols
 func (c *Client) GetIDMapFor(symbols ...string) (CryptocurrencyMap, error) {
 	endpt := "map"
 	req, err := http.NewRequest("GET", apiURL+cryptocurrency+endpt, nil)
@@ -125,6 +125,10 @@ func (c *Client) GetIDMapFor(symbols ...string) (CryptocurrencyMap, error) {
 	return response.Data, err
 }
 
+// GetIDMapWhere fetches CMC ID Maps for specified parameters
+// Allowed values for status: "active", "inactive"
+// start >= 1
+// limit 1 - 5000
 func (c *Client) GetIDMapWhere(status string, start, limit int) (CryptocurrencyMap, error) {
 	endpt := "map"
 	req, err := http.NewRequest("GET", apiURL+cryptocurrency+endpt, nil)
