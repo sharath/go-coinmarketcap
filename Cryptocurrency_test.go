@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"testing"
+	"time"
 )
 
 func checkKey(t *testing.T) *Client {
@@ -32,6 +33,7 @@ func TestClient_GetInfo(t *testing.T) {
 			t.FailNow()
 		}
 	}
+	time.Sleep(time.Minute)
 }
 
 func TestClient_GetInfoByID(t *testing.T) {
@@ -45,6 +47,7 @@ func TestClient_GetInfoByID(t *testing.T) {
 			t.FailNow()
 		}
 	}
+	time.Sleep(time.Minute)
 }
 
 func TestClient_GetInfoBySymbol(t *testing.T) {
@@ -58,6 +61,7 @@ func TestClient_GetInfoBySymbol(t *testing.T) {
 			t.FailNow()
 		}
 	}
+	time.Sleep(time.Minute)
 }
 
 func TestClient_GetIDMapFor(t *testing.T) {
@@ -72,6 +76,7 @@ func TestClient_GetIDMapFor(t *testing.T) {
 			t.FailNow()
 		}
 	}
+	time.Sleep(time.Minute)
 }
 
 func TestClient_GetIDMapWhere(t *testing.T) {
@@ -81,6 +86,21 @@ func TestClient_GetIDMapWhere(t *testing.T) {
 	}
 	{
 		data, err := c.GetIDMapWhere()
+		if err != nil || data == nil {
+			fmt.Println(err)
+			t.FailNow()
+		}
+	}
+	time.Sleep(time.Minute)
+}
+
+func TestClient_GetLatestListings(t *testing.T) {
+	c := checkKey(t)
+	if c == nil {
+		return
+	}
+	{
+		data, err := c.GetLatestListings(Limit(10), Start(15))
 		if err != nil || data == nil {
 			fmt.Println(err)
 			t.FailNow()

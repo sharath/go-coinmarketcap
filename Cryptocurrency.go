@@ -167,11 +167,11 @@ func (c *Client) GetIDMapWhere(opts ...func(values url.Values) string) (Cryptocu
 // listings/latest
 type CryptocurrencyListingsLatestPrice struct {
 	Price            float64   `json:"price"`
-	Volume24H        int64     `json:"volume_24h"`
+	Volume24H        float64   `json:"volume_24h"`
 	PercentChange1H  float64   `json:"percent_change_1h"`
 	PercentChange24H float64   `json:"percent_change_24h"`
 	PercentChange7D  float64   `json:"percent_change_7d"`
-	MarketCap        int64     `json:"market_cap"`
+	MarketCap        float64   `json:"market_cap"`
 	LastUpdated      time.Time `json:"last_updated"`
 }
 type CryptocurrencyListingsLatestData struct {
@@ -181,9 +181,9 @@ type CryptocurrencyListingsLatestData struct {
 	Slug              string    `json:"slug"`
 	CmcRank           int       `json:"cmc_rank"`
 	NumMarketPairs    int       `json:"num_market_pairs"`
-	CirculatingSupply int       `json:"circulating_supply"`
-	TotalSupply       int       `json:"total_supply"`
-	MaxSupply         int       `json:"max_supply"`
+	CirculatingSupply float64   `json:"circulating_supply"`
+	TotalSupply       float64   `json:"total_supply"`
+	MaxSupply         float64   `json:"max_supply"`
 	LastUpdated       time.Time `json:"last_updated"`
 	DateAdded         time.Time `json:"date_added"`
 	Quote             struct {
@@ -191,7 +191,7 @@ type CryptocurrencyListingsLatestData struct {
 		BTC CryptocurrencyListingsLatestPrice `json:"BTC"`
 	} `json:"quote"`
 }
-type CryptocurrencyListingsLatest map[string]CryptocurrencyListingsLatestData
+type CryptocurrencyListingsLatest []CryptocurrencyListingsLatestData
 type CryptocurrencyListingsLatestResponse struct {
 	Data   CryptocurrencyListingsLatest `json:"data"`
 	Status CMCStatus                    `json:"status"`

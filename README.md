@@ -7,8 +7,6 @@
 
 go-coinmarketcap is a Go client library for accessing the CoinMarketCap Professional API
 
-go-coinmarketcap requires Go version 1.8 or greater.
-
 # Usage
 
 ```go
@@ -31,7 +29,7 @@ Implementation Status:
 - [ ] / cryptocurrency
     - [X] / info
     - [X] / map
-    - [ ] / listings / latest
+    - [X] / listings / latest
     - [ ] / market-pairs / latest
     - [ ] / ohlcv / historical
     - [ ] / quotes
