@@ -9,14 +9,14 @@ import (
 	"time"
 )
 
-type Metadata map[string]TokenMetadata
+type Info map[string]TokenInfo
 
 type CryptocurrencyResponse struct {
-	Data   Metadata `json:"data"`
-	Status Status   `json:"status"`
+	Data   Info   `json:"data"`
+	Status Status `json:"status"`
 }
 
-type TokenMetadata struct {
+type TokenInfo struct {
 	ID       int      `json:"id"`
 	Name     string   `json:"name"`
 	Symbol   string   `json:"symbol"`
@@ -44,23 +44,23 @@ type Status struct {
 	CreditCount  int       `json:"credit_count"`
 }
 
-// GetMetadataByID is a wrapper function for GetMetadata
-// Example Usage: GetMetadataByID(1, 2, 3)
-func (c *Client) GetMetadataByID(ids ...int) (Metadata, error) {
+// GetInfoByID is a wrapper function for GetInfo
+// Example Usage: GetInfoByID(1, 2, 3)
+func (c *Client) GetInfoByID(ids ...int) (Info, error) {
 	idsStr := strings.Trim(strings.Replace(fmt.Sprint(ids), " ", ",", -1), "[]")
-	return c.GetMetadata("id", idsStr)
+	return c.GetInfo("id", idsStr)
 }
 
-// GetMetadataByTicker is a wrapper function for GetMetadata
-// Example Usage: GetMetadataBySymbol("BTC", "ETH", "LTC")
-func (c *Client) GetMetadataBySymbol(tickers ...string) (Metadata, error) {
-	return c.GetMetadata("symbol", strings.Join(tickers, ","))
+// GetInfoByTicker is a wrapper function for GetInfo
+// Example Usage: GetInfoBySymbol("BTC", "ETH", "LTC")
+func (c *Client) GetInfoBySymbol(tickers ...string) (Info, error) {
+	return c.GetInfo("symbol", strings.Join(tickers, ","))
 }
 
-// GetMetadata fetches metadeta for specified ids or symbols
-// Example usages: GetMetadata("id", "1,2,3")
-//                 GetMetadata("symbols", "BTC,ETH,LTC")
-func (c *Client) GetMetadata(key, vals string) (Metadata, error) {
+// GetInfo fetches metadeta for specified ids or symbols
+// Example usages: GetInfo("id", "1,2,3")
+//                 GetInfo("symbols", "BTC,ETH,LTC")
+func (c *Client) GetInfo(key, vals string) (Info, error) {
 	endpt := "info"
 	params := "?" + key + "=" + strings.Replace(vals, " ", "", -1)
 	req, err := http.NewRequest("GET", apiURL+cryptocurrency+endpt+params, nil)

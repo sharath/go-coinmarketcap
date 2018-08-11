@@ -13,37 +13,21 @@ func TestNewClient(t *testing.T) {
 	}
 }
 
-func TestClient_GetMetadata(t *testing.T) {
+func TestClient_GetInfo(t *testing.T) {
 	c := NewClient(os.Getenv("CMC_API_KEY"))
 	if c == nil {
 		fmt.Println("Warning: CMC_API_KEY not set.")
 		t.SkipNow()
 	}
 	{
-		data, err := c.GetMetadata("symbol", "ETH,BTC,LTC")
+		data, err := c.GetInfo("symbol", "ETH,BTC,LTC")
 		if err != nil || data == nil {
 			fmt.Println(data, err)
 			t.FailNow()
 		}
 	}
 	{
-		data, err := c.GetMetadata("id", "1,2,3")
-		if err != nil || data == nil {
-			fmt.Println(data, err)
-			t.FailNow()
-		}
-	}
-}
-
-func TestClient_GetMetadataByID(t *testing.T) {
-	c := NewClient(os.Getenv("CMC_API_KEY"))
-	if c == nil {
-		fmt.Println("Warning: CMC_API_KEY not set.")
-		t.SkipNow()
-
-	}
-	{
-		data, err := c.GetMetadataByID(1, 2, 3)
+		data, err := c.GetInfo("id", "1,2,3")
 		if err != nil || data == nil {
 			fmt.Println(data, err)
 			t.FailNow()
@@ -51,14 +35,30 @@ func TestClient_GetMetadataByID(t *testing.T) {
 	}
 }
 
-func TestClient_GetMetadataBySymbol(t *testing.T) {
+func TestClient_GetInfoByID(t *testing.T) {
+	c := NewClient(os.Getenv("CMC_API_KEY"))
+	if c == nil {
+		fmt.Println("Warning: CMC_API_KEY not set.")
+		t.SkipNow()
+
+	}
+	{
+		data, err := c.GetInfoByID(1, 2, 3)
+		if err != nil || data == nil {
+			fmt.Println(data, err)
+			t.FailNow()
+		}
+	}
+}
+
+func TestClient_GetInfoBySymbol(t *testing.T) {
 	c := NewClient(os.Getenv("CMC_API_KEY"))
 	if c == nil {
 		fmt.Println("Warning: CMC_API_KEY not set.")
 		t.SkipNow()
 	}
 	{
-		data, err := c.GetMetadataBySymbol("BTC", "ETH")
+		data, err := c.GetInfoBySymbol("BTC", "ETH")
 		if err != nil || data == nil {
 			fmt.Println(data, err)
 			t.FailNow()

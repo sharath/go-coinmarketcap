@@ -6,7 +6,6 @@ import (
 )
 
 const (
-	baseURL        = "https://pro-api.coinmarketcap.com/"
 	apiURL         = "https://pro-api.coinmarketcap.com/v1/"
 	cryptocurrency = "cryptocurrency/"
 )
