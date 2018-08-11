@@ -24,5 +24,27 @@ func main() {
 
 # Roadmap
 
-Implemented Endpoints
-- [ ] 
+Implementation Status:
+- [ ] /cryptocurrency
+    - [X] /info
+    - [X] /map
+    - [ ] /listings/latest
+    - [ ] /market-pairs/latest
+    - [ ] /ohlcv/historical
+    - [ ] /quotes
+        - [ ] /latest
+        - [ ] /historical
+- [ ] /exchange
+    - [ ] /info
+    - [ ] /map
+    - [ ] /listings/latest
+    - [ ] /market-pairs/latest
+    - [ ] /quotes
+        - [ ] /latest
+        - [ ] /historical
+- [ ] /global-metrics
+    - [ ] /quotes
+        - [ ] /latest
+        - [ ] /historical
+- [ ] /tools
+    - [ ] /price-conversion
