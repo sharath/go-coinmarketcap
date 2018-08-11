@@ -1,12 +1,13 @@
 language: go
 go:
 - master
-matrix:
-  allow_failures:
-  - go: master
-  fast_finish: true
+before_install:
+- go get github.com/mattn/goveralls
 install:
-- go test
+- go get golang.org/x/tools/cmd/cover
+- go get github.com/mattn/goveralls
+script:
+- $GOPATH/bin/goveralls -service=travis-ci
 # im getting rate limited
 # env:
 #   matrix:
