@@ -38,6 +38,19 @@ func main() {
 
 ```
 
+Output:
+```
+Bitcoin 6376.87602162
+Ethereum 328.603780168
+XRP 0.309249480685
+Bitcoin Cash 579.289817183
+EOS 5.17837316526
+Stellar 0.227180358509
+Litecoin 60.9706142839
+Cardano 0.114726012895
+Tether 1.00333811227
+Monero 95.5019758599
+```
 # Roadmap
 
 Implementation Status:
@@ -45,7 +58,7 @@ Implementation Status:
     - [X] / info
     - [X] / map
     - [X] / listings / latest
-    - [ ] / market-pairs / latest
+    - [X] / market-pairs / latest
     - [ ] / ohlcv / historical
     - [ ] / quotes
         - [ ] / latest
