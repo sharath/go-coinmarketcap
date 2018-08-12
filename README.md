@@ -13,14 +13,29 @@ go-coinmarketcap is a Go client library for accessing the CoinMarketCap Professi
 package main
 
 import (
-	"fmt"
 	cmc "github.com/sharath/go-coinmarketcap"
+	"fmt"
+	"os"
 )
 
 func main() {
-	client := cmc.NewClient("my_api_key")
-	fmt.Println(client.GetInfoBySymbol("BTC", "ETH", "LTC"))
+	// make a new client
+	client := cmc.NewClient(os.Getenv("CMC_API_KEY"))
+
+	// fetch top 10 tokens
+	listings, _ := client.GetLatestListings(
+		cmc.Limit(10),
+	)
+
+	// print names and prices of top 10
+	for _, tok := range listings {
+		token := tok.Name
+		price := tok.Quote.USD.Price
+
+		fmt.Println(token, price)
+	}
 }
+
 ```
 
 # Roadmap
