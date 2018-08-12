@@ -33,7 +33,7 @@ type CryptocurrencyInfoData struct {
 type CryptocurrencyInfo map[string]CryptocurrencyInfoData
 type CryptocurrencyInfoResponse struct {
 	Data   CryptocurrencyInfo `json:"data"`
-	Status CMCStatus          `json:"status"`
+	Status ResponseStatus     `json:"status"`
 }
 
 // GetInfoByID is a wrapper function for GetInfo
@@ -95,7 +95,7 @@ type CryptocurrencyMapData struct {
 type CryptocurrencyMap []CryptocurrencyMapData
 type CryptocurrencyMapResponse struct {
 	Data   CryptocurrencyMap `json:"data"`
-	Status CMCStatus         `json:"status"`
+	Status ResponseStatus    `json:"status"`
 }
 
 // GetIDMapFor fetches CMC ID Maps for specified symbols
@@ -194,7 +194,7 @@ type CryptocurrencyListingsLatestData struct {
 type CryptocurrencyListingsLatest []CryptocurrencyListingsLatestData
 type CryptocurrencyListingsLatestResponse struct {
 	Data   CryptocurrencyListingsLatest `json:"data"`
-	Status CMCStatus                    `json:"status"`
+	Status ResponseStatus               `json:"status"`
 }
 
 // GetIDMapFor fetches CMC ID Maps for specified symbols
@@ -216,6 +216,79 @@ func (c *Client) GetLatestListings(opts ...func(values url.Values) string) (Cryp
 	defer resp.Body.Close()
 
 	response := new(CryptocurrencyListingsLatestResponse)
+	err = json.NewDecoder(resp.Body).Decode(response)
+	if err != nil {
+		return nil, err
+	}
+
+	if response.Status.ErrorCode >= 400 {
+		return nil, errors.New(response.Status.ErrorMessage)
+	}
+	return response.Data, err
+}
+
+// / market-pairs / latest
+type CryptocurrencyMarketPairsLatest struct {
+	ID             int    `json:"id"`
+	Name           string `json:"name"`
+	Symbol         string `json:"symbol"`
+	NumMarketPairs int    `json:"num_market_pairs"`
+	MarketPairs    []struct {
+		Exchange struct {
+			ID   int    `json:"id"`
+			Name string `json:"name"`
+			Slug string `json:"slug"`
+		} `json:"exchange"`
+		MarketPair     string `json:"market_pair"`
+		MarketPairBase struct {
+			CurrencyID     int    `json:"currency_id"`
+			CurrencySymbol string `json:"currency_symbol"`
+			CurrencyType   string `json:"currency_type"`
+		} `json:"market_pair_base"`
+		MarketPairQuote struct {
+			CurrencyID     int    `json:"currency_id"`
+			CurrencySymbol string `json:"currency_symbol"`
+			CurrencyType   string `json:"currency_type"`
+		} `json:"market_pair_quote"`
+		Quote struct {
+			ExchangeReported struct {
+				Price          float64   `json:"price"`
+				Volume24HBase  float64   `json:"volume_24h_base"`
+				Volume24HQuote float64   `json:"volume_24h_quote"`
+				LastUpdated    time.Time `json:"last_updated"`
+			} `json:"exchange_reported"`
+			USD struct {
+				Price       float64   `json:"price"`
+				Volume24H   float64   `json:"volume_24h"`
+				LastUpdated time.Time `json:"last_updated"`
+			} `json:"USD"`
+		} `json:"quote"`
+	} `json:"market_pairs"`
+}
+type CryptocurrencyMarketPairsLatestResponse struct {
+	Data   *CryptocurrencyMarketPairsLatest `json:"data"`
+	Status ResponseStatus                   `json:"status"`
+}
+
+// GetLatestMarketPairsBy fetches CMC Market pairs for specified symbols
+func (c *Client) GetLatestMarketPairsBy(opts ...func(values url.Values) string) (*CryptocurrencyMarketPairsLatest, error) {
+	endpt := "/market-pairs/latest"
+	req, err := http.NewRequest("GET", apiURL+cryptocurrency+endpt, nil)
+	if err != nil {
+		return nil, err
+	}
+	for _, opt := range opts {
+		req.URL.RawQuery = opt(req.URL.Query())
+	}
+	req.Header["X-CMC_PRO_API_KEY"] = []string{c.apiKey}
+
+	resp, err := c.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	response := new(CryptocurrencyMarketPairsLatestResponse)
 	err = json.NewDecoder(resp.Body).Decode(response)
 	if err != nil {
 		return nil, err

@@ -51,7 +51,7 @@ func Convert(currency string) func(values url.Values) string {
 
 // Sort: option to sort listing by
 // Default: "market_cap"
-// Allowed: "market_cap", "name", "symbol", "date_added", "price", "circulating_supply", "total_supply",
+// Allowed: "market_cap", "name", "symbol", "c", "price", "circulating_supply", "total_supply",
 //          "max_supply", "num_market_pairs", "volume_24h", "percent_change_1h", "percent_change_24h",
 //          "percent_change_7d"
 func Sort(sort_by string) func(values url.Values) string {
@@ -62,7 +62,7 @@ func Sort(sort_by string) func(values url.Values) string {
 }
 
 // SortDir: option to sort listing in either ascending or descending order
-// Default: "asc"
+// Default: "desc"
 // Allowed: "asc", "desc"
 func SortDir(dir string) func(values url.Values) string {
 	return func(q url.Values) string {
@@ -77,6 +77,24 @@ func SortDir(dir string) func(values url.Values) string {
 func CryptocurrencyType(ctype string) func(values url.Values) string {
 	return func(q url.Values) string {
 		q.Add("cryptocurrency_type", ctype)
+		return q.Encode()
+	}
+}
+
+// ID: ID to filter results for
+// Allowed: >= 1
+func ID(id int) func(values url.Values) string {
+	return func(q url.Values) string {
+		q.Add("start", strconv.Itoa(id))
+		return q.Encode()
+	}
+}
+
+// Symbol: cryptocurrency by symbol
+// Examples: "BTC", "ETH", "LTC"
+func Symbol(symbol string) func(values url.Values) string {
+	return func(q url.Values) string {
+		q.Add("symbol", symbol)
 		return q.Encode()
 	}
 }

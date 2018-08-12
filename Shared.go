@@ -2,7 +2,7 @@ package go_coinmarketcap
 
 import "time"
 
-type CMCStatus struct {
+type ResponseStatus struct {
 	Timestamp    time.Time `json:"timestamp"`
 	ErrorCode    int       `json:"error_code"`
 	ErrorMessage string    `json:"error_message"`
